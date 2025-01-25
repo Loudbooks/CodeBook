@@ -46,6 +46,7 @@
       font-weight: bold;
 
       background-color: rgba(10, 10, 10, 0.4);
+      backdrop-filter: blur(10px);
 
       color: white;
     }
@@ -77,6 +78,7 @@
 
     button {
       background-color: rgba(10, 10, 10, 0.4);
+      backdrop-filter: blur(10px);
       border: none;
       color: white;
       font-family: 'Jetbrains Mono', monospace;
