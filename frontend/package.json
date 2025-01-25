@@ -30,6 +30,7 @@
 	},
 	"dependencies": {
 		"@monaco-editor/loader": "^1.4.0",
+		"highlight.js": "^11.11.1",
 		"monaco-editor": "^0.52.2",
 		"vitest": "^3.0.4"
 	}

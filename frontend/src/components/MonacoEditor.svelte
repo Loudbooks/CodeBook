@@ -3,6 +3,8 @@
 	import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 	import Toolbar from './Toolbar.svelte';
 	import { backendPort } from '$lib/stores';
+  import hljs from 'highlight.js';
+  import { languageList } from '$lib/languages';
 
 	export let content: string = "";
 	export let theme: string = "Darcula";
@@ -108,6 +110,12 @@
 
 				const model = monaco.editor.createModel(content, language);
 				editor.setModel(model);
+
+        editor.onDidPaste(async () => {
+          const pastedValue = editor.getValue();
+
+          updateLanguage(pastedValue);
+        });
 			});
 	});
 
@@ -115,6 +123,30 @@
 		monaco?.editor.getModels().forEach((model) => model.dispose());
 		editor?.dispose();
 	});
+
+  async function updateLanguage(newValue: string) {
+    const detectedLang = await detectLanguageAsync(newValue);
+
+    if (!detectedLang || !languageList.includes(detectedLang)) {
+      monaco.editor.setModelLanguage(editor.getModel()!, 'plaintext');
+      language = 'plaintext';
+      return;
+    }
+
+    if (detectedLang !== language) {
+      monaco.editor.setModelLanguage(editor.getModel()!, detectedLang);
+      language = detectedLang;
+    }
+  }
+
+  function detectLanguageAsync(text: string) {
+    return new Promise<string>((resolve) => {
+      setTimeout(() => {
+        const detected = hljs.highlightAuto(text);
+        resolve(detected.language || 'plaintext');
+      }, 0); 
+    });
+  }
 
 	export function getContent() {
 		return editor?.getValue() || '';
