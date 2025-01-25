@@ -99,8 +99,7 @@ impl MigrationService {
             let paste_expires_at = old_paste.get_i64("expires").unwrap_or_default();
             let paste_created_at = old_paste.get_i64("created").unwrap_or_default();
             let paste_creator_ip = old_paste.get_str("creatorIP").unwrap_or_default();
-            let paste_report_book = old_paste.get_bool("reportBook").unwrap_or_default();
-            let paste_wrap = old_paste.get_bool("wrap").unwrap_or_default();
+            let language = old_paste.get_str("language").unwrap_or_default();
             
             if paste_id.is_empty() {
                 info!("Skipping paste with empty ID.");
@@ -109,12 +108,10 @@ impl MigrationService {
 
             let paste = Paste {
                 id: paste_id.to_string(),
-                title: "".to_string(),
                 created: paste_created_at as u64,
-                report_book: paste_report_book,
-                wrap: paste_wrap,
                 creator_ip: paste_creator_ip.to_string(),
                 expires_at: paste_expires_at as u64,
+                language: language.to_string(),
             };
 
             self.pastes_collection.insert_one(paste).await?;

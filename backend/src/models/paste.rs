@@ -4,23 +4,19 @@ use crate::models::user::UserDTO;
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Paste {
     pub id: String,
-    pub title: String,
     pub created: u64,
-    pub report_book: bool,
-    pub wrap: bool,
     pub creator_ip: String,
     pub expires_at: u64,
+    pub language: String
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PasteDTO {
     pub id: String,
     pub user: UserDTO,
-    pub title: String,
     pub created: u64,
-    pub report_book: bool,
-    pub wrap: bool,
     pub expires_at: u64,
+    pub language: String
 }
 
 impl Paste {
@@ -28,11 +24,9 @@ impl Paste {
         PasteDTO {
             id: self.id.clone(),
             user,
-            title: self.title.clone(),
             created: self.created,
-            report_book: self.report_book,
-            wrap: self.wrap,
             expires_at: self.expires_at,
+            language: self.language.clone()
         }
     }
 }

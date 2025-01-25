@@ -3,3 +3,4 @@
 docker-compose.yml
 .idea
 /backend/target
+frontend/node_modules

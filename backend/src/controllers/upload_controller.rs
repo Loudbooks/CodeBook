@@ -13,47 +13,23 @@ pub async fn upload_handler(
     req: HttpRequest,
     body: String,
 ) -> impl Responder {
-    let title = req
-        .headers()
-        .get("title")
-        .and_then(|v| v.to_str().ok())
-        .unwrap_or("");
-    if title.is_empty() {
-        return HttpResponse::BadRequest().body("Title is required");
-    }
-
-    let report_book = req
-        .headers()
-        .get("reportBook")
-        .map(|v| v.to_str().unwrap_or("false") == "true")
-        .unwrap_or(false);
-
-    let wrap = req
-        .headers()
-        .get("wrap")
-        .map(|v| v.to_str().unwrap_or("false") == "true")
-        .unwrap_or(false);
-
-    let mut expires = req
-        .headers()
-        .get("expires")
-        .and_then(|v| v.to_str().ok()?.parse::<u64>().ok())
-        .unwrap_or(86_400_000);
+    let expires =
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
+            + 604800;
 
     let since_the_epoch = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
         .as_millis() as u64;
-
-    if expires < 60_000 {
-        return HttpResponse::BadRequest().body("Expire time too short");
-    }
-    if expires < since_the_epoch {
-        expires += since_the_epoch;
-    }
-    if expires > since_the_epoch + 2_765_000_000 {
-        return HttpResponse::BadRequest().body("Expire time too long");
-    }
+    
+    let language = req
+        .headers()
+        .get("Language")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("plaintext");
 
     let ip = match IPUtils::get_ip_from_request(&req) {
         Some(ip) => ip,
@@ -64,12 +40,10 @@ pub async fn upload_handler(
 
     let paste = Paste {
         id: file_id.clone(),
-        title: title.to_string(),
         created: since_the_epoch,
-        report_book,
-        wrap,
         creator_ip: ip.clone(),
         expires_at: expires,
+        language: language.to_string(),
     };
 
     if let Err(e) = aws_service.put_file(&file_id, body.as_ref()).await {

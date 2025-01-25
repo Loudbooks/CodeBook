@@ -16,7 +16,7 @@ use std::sync::Arc;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("PasteBook backend service starting...");
+    println!("CodeBook backend service starting...");
 
     env_logger::init();
 
