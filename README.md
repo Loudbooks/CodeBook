@@ -1,14 +1,14 @@
-# PasteBook 
-An easy on the eyes, portable, lightning fast pastebin written in Svelte and Rust.
+# CodeBook 
+A fork of [CodeBook](https://github.com/Loudbooks/CodeBook) centered around code.
 
 ### Prerequisites
 Docker. Both the frontend and backend are to be installed with Docker. You can learn more [here](https://www.docker.com).
 
 ## Installation
-The following is a guide to get PasteBook running on your system under your domain with SSL. All of this was tested on Ubuntu Linux.
+The following is a guide to get CodeBook running on your system under your domain with SSL. All of this was tested on Ubuntu Linux.
 
 ### Preparation
-Download `docker-compose.yml` [here](https://github.com/Loudbooks/PasteBook/blob/master/docker-compose.yml).
+Download `docker-compose.yml` [here](https://github.com/Loudbooks/CodeBook/blob/master/docker-compose.yml).
 
 ### Configuration
 > [!CAUTION]
@@ -25,9 +25,9 @@ MAX_PAYLOAD_SIZE=
 
 All of the following are optional. You can leave it all blank, or not even have a `.env` file at all. 
 
-`TITLE` - The title to be used around PasteBook.
+`TITLE` - The title to be used around CodeBook.
 
-`DESCRIPTION` - The description to be used in embeds and on the home page of PasteBook.
+`DESCRIPTION` - The description to be used in embeds and on the home page of CodeBook.
 
 `DISABLE_NEW` - Disables the new paste page. API is still accessible.
 
@@ -45,13 +45,13 @@ sudo systemctl enable docker
 sudo docker compose up -d
 ```
 
-Awesome! PasteBook is now running.
+Awesome! CodeBook is now running.
 
 ## Nginx Configuration
-In order to run PasteBook under a domain, you will need to use a reverse proxy. The following will serve as a guide to setting up Nginx.
+In order to run CodeBook under a domain, you will need to use a reverse proxy. The following will serve as a guide to setting up Nginx.
 
 ### Prerequisites
-- PasteBook is fully installed with the instructions above.
+- CodeBook is fully installed with the instructions above.
 - A working Nginx installation. Learn more [here](https://nginx.org/en/linux_packages.html#instructions).
 - A working Certbot installation. Learn more [here](https://certbot.eff.org/instructions?ws=nginx&os=snap).
 ## Nginx Preparation
@@ -61,15 +61,15 @@ Navigate to `/etc/nginx/sites-enabled`.
 You will need to create a DNS A record pointing to your machine with the root and with the `api.` prefix. I use CloudFlare.
 
 ### Configuration 
-Download `pastebook.conf` [here](https://github.com/Loudbooks/PasteBook/blob/master/pastebook.conf) and place it in `/etc/nginx/sites-enabled`.
+Download `codebook.conf` [here](https://github.com/Loudbooks/CodeBook/blob/master/codebook.conf) and place it in `/etc/nginx/sites-enabled`.
 
-`<DOMAIN>` - Change this to your domain name. For example, mine is `pastebook.dev`.
+`<DOMAIN>` - Change this to your domain name. For example, mine is `codebook.dev`.
 
 > [!NOTE]
-> You can easily replace all instances of `<DOMAIN>` with your domain with the following command. In this example, I used `pastebook.dev`. Make sure to use yours.
+> You can easily replace all instances of `<DOMAIN>` with your domain with the following command. In this example, I used `codebook.dev`. Make sure to use yours.
 > 
 > ```bash
-> DOMAIN=pastebook.dev && sudo sed -i "s/<DOMAIN>/${DOMAIN}/g" /etc/nginx/sites-available/pastebook.conf
+> DOMAIN=codebook.dev && sudo sed -i "s/<DOMAIN>/${DOMAIN}/g" /etc/nginx/sites-available/codebook.conf
 > ```
 
 ### SSL Configuration
@@ -83,7 +83,7 @@ Run the following.
 systemctl restart nginx
 ```
 
-# Updating PasteBook
+# Updating CodeBook
 Run the following commands in succession.
 ```bash
 docker compose stop
