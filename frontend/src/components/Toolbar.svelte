@@ -92,7 +92,7 @@
     }
 
     select {
-      color: unset;
+      color: initial;
     }
 
   </style>
