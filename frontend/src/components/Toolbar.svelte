@@ -52,7 +52,7 @@
 
     .language:hover {
       cursor: pointer;
-      background-color: rgba(10, 10, 10, 0.2);
+      background-color: rgba(10, 10, 10, 0.6);
     }
 
     #language {
@@ -88,7 +88,11 @@
 
     button:hover {
       cursor: pointer;
-      background-color: rgba(10, 10, 10, 0.2);
+      background-color: rgba(10, 10, 10, 0.6);
+    }
+
+    select {
+      color: unset;
     }
 
   </style>
