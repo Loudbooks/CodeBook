@@ -19,21 +19,10 @@
 
 <div>
     <Loading />
-    {#await Promise.all([metadata, content]) }
-    {:then [metadataData, contentData]}
+
+    {#await Promise.all([metadata, content]) then}
         <MonacoEditor content={contentDataString} language={language} />
     {:catch error}
         <p>{error.message}</p>
     {/await}
 </div>
-
-<style lang="scss">
-	#editor-container {
-		width: 100vw;
-		height: 100vh;
-
-		z-index: 1;
-
-		position: absolute;
-	}
-</style>
