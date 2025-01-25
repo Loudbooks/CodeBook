@@ -4,11 +4,11 @@
 	import Toolbar from './Toolbar.svelte';
 	import { backendPort } from '$lib/stores';
   import hljs from 'highlight.js';
+  import { languageList } from '$lib/languages';
 
 	export let content: string = "";
 	export let theme: string = "Darcula";
 	export let language: string = 'plaintext';
-
 
 	let editor: Monaco.editor.IStandaloneCodeEditor;
 	let monaco: typeof Monaco;
@@ -110,12 +110,13 @@
 
 				const model = monaco.editor.createModel(content, language);
 				editor.setModel(model);
-			});
 
-    editor.onDidPaste(() => {
-      const pastedValue = editor.getValue();
-      updateLanguage(pastedValue);
-    });
+        editor.onDidPaste(async () => {
+          const pastedValue = editor.getValue();
+
+          updateLanguage(pastedValue);
+        });
+			});
 	});
 
 	onDestroy(() => {
@@ -123,17 +124,28 @@
 		editor?.dispose();
 	});
 
-  function updateLanguage(newValue: string) {
-    const detectedLang = detectLanguage(newValue);
+  async function updateLanguage(newValue: string) {
+    const detectedLang = await detectLanguageAsync(newValue);
+
+    if (!detectedLang || !languageList.includes(detectedLang)) {
+      monaco.editor.setModelLanguage(editor.getModel()!, 'plaintext');
+      language = 'plaintext';
+      return;
+    }
+
     if (detectedLang !== language) {
       monaco.editor.setModelLanguage(editor.getModel()!, detectedLang);
       language = detectedLang;
     }
   }
 
-  function detectLanguage(text: string): string {
-    const detected = hljs.highlightAuto(text);
-    return detected.language || 'plaintext'; 
+  function detectLanguageAsync(text: string) {
+    return new Promise<string>((resolve) => {
+      setTimeout(() => {
+        const detected = hljs.highlightAuto(text);
+        resolve(detected.language || 'plaintext');
+      }, 0); 
+    });
   }
 
 	export function getContent() {
