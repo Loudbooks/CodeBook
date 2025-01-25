@@ -1,5 +1,5 @@
 # CodeBook 
-A fork of [CodeBook](https://github.com/Loudbooks/CodeBook) centered around code.
+A fork of [PasteBook](https://github.com/Loudbooks/PasteBook) centered around code.
 
 ### Prerequisites
 Docker. Both the frontend and backend are to be installed with Docker. You can learn more [here](https://www.docker.com).
