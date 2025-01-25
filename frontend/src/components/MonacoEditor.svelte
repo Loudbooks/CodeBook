@@ -38,6 +38,11 @@
       return;
     }
 
+    if (editor.getValue().trim() === '') {
+      toolbar.setText('empty');
+      return;
+    }
+
 		const xhr = new XMLHttpRequest();
 
 		let domain = window.location.host;
