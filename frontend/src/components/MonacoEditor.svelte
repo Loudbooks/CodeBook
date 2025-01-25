@@ -75,7 +75,8 @@
 
 				return;
 			} else {
-        toolbar.setText('saved!');
+        toolbar.setText('copied!');
+
 
         setTimeout(() => {
           toolbar.setText('save');
@@ -89,6 +90,7 @@
         domain = 'http://' + domain;
       }
 
+      navigator.clipboard.writeText(domain + '/p/' + xhr.response);
 			window.history.replaceState(null, '', domain + '/p/' + xhr.response);
 		};
 	};
@@ -115,6 +117,10 @@
           const pastedValue = editor.getValue();
 
           updateLanguage(pastedValue);
+        });
+
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+          handleSubmit();
         });
 			});
 	});
