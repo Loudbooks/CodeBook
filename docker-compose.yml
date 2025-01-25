@@ -1,26 +1,26 @@
 services:
   backend:
-    image: ghcr.io/loudbooks/pastebook-backend:latest
-    container_name: pastebook-backend
+    image: ghcr.io/loudbooks/codebook-backend:latest
+    container_name: codebook-backend
     restart: always
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/pastebook
-      - SPRING_DATA_MONGODB_DATABASE=pastebook
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/codebook
+      - SPRING_DATA_MONGODB_DATABASE=codebook
       - S3_ACCESS_KEY_ID=minioadmin
       - S3_SECRET_ACCESS_KEY=minioadmin
-      - S3_BUCKET=pastebook
+      - S3_BUCKET=codebook
       - S3_ENDPOINT=http://minio:9000
     depends_on:
       minio:
         condition: service_healthy
     networks:
-      - pastebook-network
+      - codebook-network
 
   frontend:
-    image: ghcr.io/loudbooks/pastebook-frontend:latest
-    container_name: pastebook-frontend
+    image: ghcr.io/loudbooks/codebook-frontend:latest
+    container_name: codebook-frontend
     restart: always
     ports:
       - "3000:3000"
@@ -34,7 +34,7 @@ services:
     depends_on:
       - backend
     networks:
-      - pastebook-network
+      - codebook-network
     pull_policy: always
 
   mongo:
@@ -44,11 +44,11 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_DATABASE: pastebook
+      MONGO_INITDB_DATABASE: codebook
     volumes:
       - mongo-data:/data/db
     networks:
-      - pastebook-network
+      - codebook-network
     pull_policy: always
     
   minio:
@@ -64,9 +64,9 @@ services:
     ports:
       - "9000:9000"
     networks:
-      pastebook-network:
+      codebook-network:
         aliases:
-            - pastebook.minio
+            - codebook.minio
     pull_policy: always
     healthcheck:                                                                                                                                               
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]                                                                                   
@@ -79,5 +79,5 @@ volumes:
   minio-data:
 
 networks:
-  pastebook-network:
+  codebook-network:
     driver: bridge
