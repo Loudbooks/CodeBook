@@ -40,6 +40,11 @@
 
     if (editor.getValue().trim() === '') {
       toolbar.setText('empty');
+
+      setTimeout(() => {
+        toolbar.setText('save');
+      }, 3000);
+
       return;
     }
 
