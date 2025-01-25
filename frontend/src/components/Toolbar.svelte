@@ -30,7 +30,7 @@
   <style>
     .toolbar {
       position: absolute;
-      bottom: 0;
+      bottom: 0px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -83,6 +83,7 @@
       padding: 10px;
       margin-left: 10px;
       outline: none;
+      height: 100%;
     }
 
     button:hover {
