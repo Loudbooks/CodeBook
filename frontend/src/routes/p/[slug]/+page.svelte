@@ -18,8 +18,8 @@
 </script>
 
 <div>
+    <Loading />
     {#await Promise.all([metadata, content]) }
-        <Loading />
     {:then [metadataData, contentData]}
         <MonacoEditor content={contentDataString} language={language} />
     {:catch error}
