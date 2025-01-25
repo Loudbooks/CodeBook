@@ -3,10 +3,12 @@
 	import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 	import Toolbar from './Toolbar.svelte';
 	import { backendPort } from '$lib/stores';
+  import hljs from 'highlight.js';
 
 	export let content: string = "";
 	export let theme: string = "Darcula";
 	export let language: string = 'plaintext';
+
 
 	let editor: Monaco.editor.IStandaloneCodeEditor;
 	let monaco: typeof Monaco;
@@ -109,12 +111,30 @@
 				const model = monaco.editor.createModel(content, language);
 				editor.setModel(model);
 			});
+
+    editor.onDidPaste(() => {
+      const pastedValue = editor.getValue();
+      updateLanguage(pastedValue);
+    });
 	});
 
 	onDestroy(() => {
 		monaco?.editor.getModels().forEach((model) => model.dispose());
 		editor?.dispose();
 	});
+
+  function updateLanguage(newValue: string) {
+    const detectedLang = detectLanguage(newValue);
+    if (detectedLang !== language) {
+      monaco.editor.setModelLanguage(editor.getModel()!, detectedLang);
+      language = detectedLang;
+    }
+  }
+
+  function detectLanguage(text: string): string {
+    const detected = hljs.highlightAuto(text);
+    return detected.language || 'plaintext'; 
+  }
 
 	export function getContent() {
 		return editor?.getValue() || '';
