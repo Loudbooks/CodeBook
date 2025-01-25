@@ -2,7 +2,6 @@
 	import { onDestroy, onMount } from 'svelte';
 	import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 	import Toolbar from './Toolbar.svelte';
-	import { goto } from '$app/navigation';
 	import { backendPort } from '$lib/stores';
 
 	export let content: string = "";
@@ -15,6 +14,12 @@
 	let uploading = false;
 
   let toolbar: Toolbar;
+
+  onMount(() => {
+    window.addEventListener('resize', function() {
+      editor.layout();
+    });
+  })
 
 	const handleLanguageChange = (newLanguage: string) => {
 		language = newLanguage.toLowerCase();
