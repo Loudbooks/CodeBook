@@ -3,11 +3,11 @@
 	import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 	import Toolbar from './Toolbar.svelte';
 	import { backendPort } from '$lib/stores';
-  import hljs from 'highlight.js';
-  import { languageList } from '$lib/languages';
+	import hljs from 'highlight.js';
+	import { languageList } from '$lib/languages';
 
-	export let content: string = "";
-	export let theme: string = "Darcula";
+	export let content: string = '';
+	export let theme: string = 'Darcula';
 	export let language: string = 'plaintext';
 
 	let editor: Monaco.editor.IStandaloneCodeEditor;
@@ -15,13 +15,13 @@
 	let editorContainer: HTMLElement;
 	let uploading = false;
 
-  let toolbar: Toolbar;
+	let toolbar: Toolbar;
 
-  onMount(() => {
-    window.addEventListener('resize', function() {
-      editor.layout();
-    });
-  })
+	onMount(() => {
+		window.addEventListener('resize', function () {
+			editor.layout();
+		});
+	});
 
 	const handleLanguageChange = (newLanguage: string) => {
 		language = newLanguage.toLowerCase();
@@ -34,24 +34,24 @@
 	};
 
 	const handleSubmit = async () => {
-    if (uploading) {
-      return;
-    }
+		if (uploading) {
+			return;
+		}
 
-    if (editor.getValue().trim() === '') {
-      toolbar.setText('empty');
+		if (editor.getValue().trim() === '') {
+			toolbar.setText('empty');
 
-      setTimeout(() => {
-        toolbar.setText('save');
-      }, 3000);
+			setTimeout(() => {
+				toolbar.setText('save');
+			}, 3000);
 
-      return;
-    }
+			return;
+		}
 
 		const xhr = new XMLHttpRequest();
 
 		let domain = window.location.host;
-    let secure = window.location.protocol === 'https:';
+		let secure = window.location.protocol === 'https:';
 
 		if (domain.includes('localhost')) {
 			xhr.open('POST', `http://localhost:${$backendPort}/upload`);
@@ -67,40 +67,39 @@
 
 		xhr.setRequestHeader('Content-Type', 'plain/text');
 		xhr.setRequestHeader('access-control-allow-methods', 'POST');
-    xhr.setRequestHeader('language', language);
+		xhr.setRequestHeader('language', language);
 
 		xhr.send(editor.getValue());
 		xhr.responseType = 'text';
 
 		uploading = true;
-    toolbar.setText('saving...');
+		toolbar.setText('saving...');
 
 		xhr.onload = function () {
 			if (xhr.status !== 200) {
 				setTimeout(() => {
 					toolbar.setText('error: ' + xhr.response);
 
-          uploading = false;
+					uploading = false;
 				}, 3000);
 
 				return;
 			} else {
-        toolbar.setText('copied!');
+				toolbar.setText('copied!');
 
+				setTimeout(() => {
+					toolbar.setText('save');
+					uploading = false;
+				}, 3000);
+			}
 
-        setTimeout(() => {
-          toolbar.setText('save');
-          uploading = false;
-        }, 3000);
-      }
+			if (secure) {
+				domain = 'https://' + domain;
+			} else {
+				domain = 'http://' + domain;
+			}
 
-      if (secure) {
-        domain = 'https://' + domain;
-      } else {
-        domain = 'http://' + domain;
-      }
-
-      navigator.clipboard.writeText(domain + '/p/' + xhr.response);
+			navigator.clipboard.writeText(domain + '/p/' + xhr.response);
 			window.history.replaceState(null, '', domain + '/p/' + xhr.response);
 		};
 	};
@@ -123,15 +122,15 @@
 				const model = monaco.editor.createModel(content, language);
 				editor.setModel(model);
 
-        editor.onDidPaste(async () => {
-          const pastedValue = editor.getValue();
+				editor.onDidPaste(async () => {
+					const pastedValue = editor.getValue();
 
-          updateLanguage(pastedValue);
-        });
+					updateLanguage(pastedValue);
+				});
 
-        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-          handleSubmit();
-        });
+				editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+					handleSubmit();
+				});
 			});
 	});
 
@@ -140,29 +139,29 @@
 		editor?.dispose();
 	});
 
-  async function updateLanguage(newValue: string) {
-    const detectedLang = await detectLanguageAsync(newValue);
+	async function updateLanguage(newValue: string) {
+		const detectedLang = await detectLanguageAsync(newValue);
 
-    if (!detectedLang || !languageList.includes(detectedLang)) {
-      monaco.editor.setModelLanguage(editor.getModel()!, 'plaintext');
-      language = 'plaintext';
-      return;
-    }
+		if (!detectedLang || !languageList.includes(detectedLang)) {
+			monaco.editor.setModelLanguage(editor.getModel()!, 'plaintext');
+			language = 'plaintext';
+			return;
+		}
 
-    if (detectedLang !== language) {
-      monaco.editor.setModelLanguage(editor.getModel()!, detectedLang);
-      language = detectedLang;
-    }
-  }
+		if (detectedLang !== language) {
+			monaco.editor.setModelLanguage(editor.getModel()!, detectedLang);
+			language = detectedLang;
+		}
+	}
 
-  function detectLanguageAsync(text: string) {
-    return new Promise<string>((resolve) => {
-      setTimeout(() => {
-        const detected = hljs.highlightAuto(text);
-        resolve(detected.language || 'plaintext');
-      }, 0); 
-    });
-  }
+	function detectLanguageAsync(text: string) {
+		return new Promise<string>((resolve) => {
+			setTimeout(() => {
+				const detected = hljs.highlightAuto(text);
+				resolve(detected.language || 'plaintext');
+			}, 0);
+		});
+	}
 
 	export function getContent() {
 		return editor?.getValue() || '';
@@ -170,7 +169,12 @@
 </script>
 
 <div class="monaco-container">
-	<Toolbar bind:this={toolbar} {language} onUpload={handleSubmit} onLanguageChange={handleLanguageChange} />
+	<Toolbar
+		bind:this={toolbar}
+		{language}
+		onUpload={handleSubmit}
+		onLanguageChange={handleLanguageChange}
+	/>
 
 	<div class="container" bind:this={editorContainer}></div>
 </div>

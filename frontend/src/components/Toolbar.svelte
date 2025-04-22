@@ -57,13 +57,19 @@
     }
 
     #language {
+      background: url(data:image/svg+xml;base64,PHN2ZyBkYXRhLW5hbWU9IkxheWVyIDEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDQuOTUgMTAiPjxwYXRoIHN0eWxlPSJmaWxsOnRyYW5zcGFyZW50IiBkPSJNMCAwaDQuOTV2MTBIMHoiLz48cGF0aCBkPSJtMS40MSA0LjY3IDEuMDctMS40OSAxLjA2IDEuNDl6bTIuMTMuNjZMMi40OCA2LjgyIDEuNDEgNS4zM3oiIHN0eWxlPSJmaWxsOiNmZmYiLz48L3N2Zz4=
+      ) no-repeat 95% 50%;      
+      -moz-appearance: none; 
+      -webkit-appearance: none; 
+      appearance: none;
+
       border: none !important;
       background-color: transparent;
 
       color: white;
       font-family: 'Jetbrains Mono', monospace;
       padding: 10px;
-      margin-right: 10px;
+      margin-right: 1px;
 
       outline: none !important;
     }
